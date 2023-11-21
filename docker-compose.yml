@@ -1,0 +1,60 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:16
+    restart: always
+    ports:
+     - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  web:
+    build: 
+      context: ./backend
+    command: > 
+      sh -c "python3 manage.py makemigrations && 
+             python3 manage.py migrate_schemas --shared &&
+             python3 manage.py collectstatic -v 3 --no-input 
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - static:/backend/static
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+  # Builds the react project in ./frontend and makes it available at the volume frontend
+  # It does not runs permanently!
+#   frontend:
+#     build: 
+#       context: ./frontend
+#     volumes:
+#       - frontend:/app/build
+  
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - frontend:/var/www/frontend
+      - static:/var/www/static
+    ports:
+      - 8001:8001
+    depends_on:
+      # - frontend
+      - web
+
+volumes:
+  frontend:
+  static:
