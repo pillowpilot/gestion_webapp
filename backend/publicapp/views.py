@@ -24,9 +24,28 @@ logger = logging.getLogger("django")
 LEAVES_MODEL_FILEPATH = (
     Path(__file__).parent / "onnx_models/leaves_disease_detection.onnx"
 )
+LEAVES_CLASS_NAMES = [
+    "healthy-leaf",
+    "moscanegra-leaf",
+    "moscanegra-defect",
+    "fumagina-leaf",
+    "canker-leaf",
+    "canker-defect",
+]
+
 FRUITS_MODEL_FILEPATH = (
     Path(__file__).parent / "onnx_models/fruits_disease_detection.onnx"
 )
+FRUITS_CLASS_NAMES = [
+    "healthy-fruit",
+    "canker-fruit",
+    "canker-defect",
+    "scab-fruit",
+    "scab-defect",
+    "blackspot-fruit",
+    "blackspot-defect",
+    "stem",
+]
 
 
 def perform_inference(form: ImageForm, model: YOLOv8):
@@ -55,15 +74,24 @@ def upload_image(request):
         if form.is_valid():
             form.save()
 
+            def dispatch_model_filepath_and_class_names(request):
+                if request.POST["model"] == "leaves":
+                    return LEAVES_MODEL_FILEPATH, LEAVES_CLASS_NAMES
+                else:
+                    return FRUITS_MODEL_FILEPATH, FRUITS_CLASS_NAMES
+
+            model_filepath, class_names = dispatch_model_filepath_and_class_names(request)
+            logger.info(f"model_filepath: {model_filepath}")
+            logger.info(f"class_names: {class_names}")
+
             # Get the current instance object to display in the template
             image_model: models.Image = form.instance
             logger.info(f"img_obj: {image_model}")
 
             # Inference
-            if LEAVES_MODEL_FILEPATH.exists():
-                yolov8_detector = YOLOv8(
-                    LEAVES_MODEL_FILEPATH, conf_thres=0.2, iou_thres=0.3
-                )
+            if model_filepath.exists():
+                YOLOv8_utils.class_names = class_names
+                yolov8_detector = YOLOv8(model_filepath, conf_thres=0.2, iou_thres=0.3)
                 inference_results, image_with_detections = perform_inference(
                     form, yolov8_detector
                 )

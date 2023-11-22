@@ -24,7 +24,10 @@
         </div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %} {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Upload</button>
+            <div class="container">
+                <button type="submit" class="btn btn-primary" name="model" value="leaves">Leaves model</button>
+                <button type="submit" class="btn btn-primary" name="model" value="fruits">Fruits model</button>
+            </div>
         </form>
         {% if img_obj %}
         <div class="container m-2">
