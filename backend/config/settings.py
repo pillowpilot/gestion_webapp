@@ -189,7 +189,7 @@ import os
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8001', 'http://54.237.246.69:8001']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8001', 'http://35.173.251.224:8001']
 
 # Base url to serve media files
 MEDIA_URL = '/media/'
