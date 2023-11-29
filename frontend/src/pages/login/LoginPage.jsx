@@ -1,19 +1,21 @@
 import React from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Paper, Typography, TextField, Button, Stack } from "@mui/material";
+import { NavLink } from "react-router-dom";
+import { Image } from "mui-image";
+import loginSideImage from "../../assets/login-side-image-2.jpg";
 
 const LoginLeft = () => {
   return (
     <Box sx={{
-      flexBasis: '66%',
+      maxHeight: "inherit",
+      flexBasis: '50%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
     }}>
-      <Typography variant="body1" sx={{
-        textAlign: 'right',
-      }}>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequuntur sed assumenda architecto recusandae placeat? Similique optio labore natus unde voluptatibus iusto. Delectus quasi adipisci obcaecati labore laboriosam cupiditate accusamus soluta!
-      </Typography>
+      <Image src={loginSideImage} style={{
+        maxHeight: "inherit",
+      }} />
     </Box>
   );
 }
@@ -21,14 +23,11 @@ const LoginLeft = () => {
 const LoginRight = () => {
   return (
     <Box sx={{
-      flexBasis: '33%',
+      padding: 4,
+      minWidth: "600px",
+      flexBasis: '50%',
     }}>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'right',
-        gap: '1.5rem',
-      }}>
+      <Stack direction="column" gap={2}>
         <Typography variant="h3">Log in</Typography>
         <Typography variant="subtitle1">Welcome back!</Typography>
         <TextField type="email" label="Email" name="email" placeholder="Enter your email here" required />
@@ -36,26 +35,39 @@ const LoginRight = () => {
         <Button type="submit" variant="contained" sx={{
           paddingY: '1rem',
         }}>Log in</Button>
-        <Typography variant="subtitle1">Don't have an account?</Typography>
-      </Box>
+        <Stack direction="row" sx={{
+          justifyContent: "space-between",
+        }}>
+          <Typography variant="subtitle1">Don't have an account?</Typography>
+          <NavLink to="/">
+            <Typography variant="subtitle1">Skip to dashboard</Typography>
+          </NavLink>
+        </Stack>
+      </Stack>
     </Box>
   );
 }
 
-const Login = () => {
+const LoginPage = () => {
   return (
-    <div className="login">
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        gap: '2rem',
-        }}>
+    <Stack direction="row" sx={{
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
+      <Paper sx={{
+        maxWidth: "1200px",
+        maxHeight: "680px",
+        display: "flex",
+        flexDirection: "row",
+        gap: 1,
+      }}>
         <LoginLeft></LoginLeft>
         <LoginRight></LoginRight>
-      </Box>
-    </div>
+      </Paper>
+    </Stack>
   );
 }
 
-export default Login;
+export default LoginPage;

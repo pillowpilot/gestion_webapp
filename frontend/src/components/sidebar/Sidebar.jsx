@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from "@mui/material";
-import { NavLink as RouterLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SidebarOption = ({ title, Icon, to }) => {
     return (
         <ListItem>
-            <ListItemButton component={RouterLink} to={to} sx={{
+            <ListItemButton component={NavLink} to={to} sx={{
                 '&': {
                     borderRadius: '10px',
                     padding: 2,
