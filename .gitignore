@@ -1,3 +1,4 @@
 *.pyc
 SG_Guaranito/
-frontend/
+frontend_cleative_tim/
+.vscode/*
