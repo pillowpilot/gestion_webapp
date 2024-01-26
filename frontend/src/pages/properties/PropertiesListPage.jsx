@@ -1,0 +1,136 @@
+import { Link } from "react-router-dom";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridDetailsButton } from "../../components/buttons/Buttons";
+import { useQuery } from "react-query";
+import { Api } from "../../api/client";
+import { useTranslation } from "react-i18next";
+
+const PropertiesDataGrid = () => {
+  const { t } = useTranslation();
+
+  const columns = [
+    { field: "id", headerName: t("properties.list.datagrid.id") },
+    {
+      field: "name",
+      headerName: t("properties.list.datagrid.name"),
+      width: 250,
+    },
+    {
+      field: "company",
+      headerName: t("properties.list.datagrid.company"),
+      width: 250,
+    },
+    {
+      field: "created_on",
+      headerName: t("properties.list.datagrid.date"),
+      width: 250,
+    },
+    {
+      field: "actions",
+      headerName: t("properties.list.datagrid.actions"),
+      renderCell: (params) => <DataGridDetailsButton id={params.id} />,
+    },
+  ];
+
+  const formatDate = (d) =>
+    d.toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+  const listProperties = useQuery("properties", Api.listProperties);
+
+  if (listProperties.isLoading)
+    return (
+      <Box>
+        <DataGrid
+          loading
+          rows={[]}
+          columns={columns}
+          sx={{
+            height: "500px",
+          }}
+        />
+      </Box>
+    );
+
+  if (listProperties.isError){
+    const errorCode = listProperties?.error?.code;
+    switch(errorCode){
+      case "ERR_NETWORK":
+        return <Typography>{t("errors.network.default")}</Typography>
+      default:
+        return <Typography>Error: {listProperties?.error?.response?.data?.detail}</Typography>
+    }
+  }
+
+  const rows = listProperties?.data?.data?.results?.map((o) => ({
+    id: o.id,
+    name: o.name,
+    company: o.company_name,
+    created_on: formatDate(new Date(o.created_on)),
+  }));
+
+  return (
+    <Box>
+      <DataGrid
+        checkboxSelection
+        pageSizeOptions={[10, 25, 50, 100]}
+        rows={rows}
+        columns={columns}
+        sx={{
+          height: "500px",
+        }}
+      />
+    </Box>
+  );
+};
+
+const Actions = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        gap: 1,
+      }}
+    >
+      <Button
+        variant="contained"
+        color="primary"
+        component={Link}
+        to={`new`}
+        sx={{
+          marginTop: 2,
+        }}
+      >
+        {t("properties.list.newBtn")}
+      </Button>
+    </Box>
+  );
+};
+
+const PropertiesPage = () => {
+  const { t } = useTranslation();
+  return (
+    <Paper
+      sx={{
+        padding: 5,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
+    >
+      <Typography variant="h4">{t("properties.list.header")}</Typography>
+      <PropertiesDataGrid />
+      <Actions />
+    </Paper>
+  );
+};
+
+export default PropertiesPage;
