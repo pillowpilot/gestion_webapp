@@ -18,34 +18,72 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from .views import public_index, upload_image
+from django.urls import path, reverse
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenBlacklistView,
+    TokenVerifyView,
+)
+from .views import public_index, whoiam
+from .viewsets.user import UserViewSet
+from .viewsets.company import CompanyViewSet
+from .viewsets.parcel import ParcelViewSet
+from .viewsets.lot import LotViewSet
+from .viewsets.inference import InferenceViewSet
+from django.utils.functional import lazy
 
-# from django.contrib.auth.models import User
-# from rest_framework import routers, serializers, viewsets
 
-# # Serializers define the API representation.
-# class UserSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['url', 'username', 'email', 'is_staff']
+def public_reverse(viewname, args=None, kwargs=None, current_app=None):
+    """
+    Url reverse resolver function for public urls.
+    See: https://github.com/django-tenants/django-tenants/issues/469#issuecomment-709319679
+    """
+    return reverse(
+        viewname,
+        urlconf=settings.PUBLIC_SCHEMA_URLCONF,
+        args=args,
+        kwargs=kwargs,
+        current_app=current_app,
+    )
 
-# # ViewSets define the view behavior.
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
 
-# # Routers provide an easy way of automatically determining the URL conf.
-# router = routers.DefaultRouter()
-# router.register(r'users', UserViewSet)
+def tenant_reverse(viewname, args=None, kwargs=None, current_app=None):
+    """
+    Url reverse resolver function for tenant urls.
+    See: https://github.com/django-tenants/django-tenants/issues/469#issuecomment-709319679
+    """
+    return reverse(
+        viewname,
+        urlconf=settings.ROOT_URLCONF,
+        args=args,
+        kwargs=kwargs,
+        current_app=current_app,
+    )
+
+
+public_reverse_lazy = lazy(public_reverse, str)
+tenant_reverse_lazy = lazy(tenant_reverse, str)
+
+router = DefaultRouter()
+router.register(r"api/companies", CompanyViewSet, basename="company")
+router.register(r"api/parcels", ParcelViewSet, basename="parcel")
+router.register(r"api/lots", LotViewSet, basename="lot")
+router.register(r"api/inferences", InferenceViewSet, basename="inference")
+router.register(r"api/users", UserViewSet, basename="user")
 
 urlpatterns = [
-    path('upload/', upload_image),
-    path('admin/', admin.site.urls),
-    path('api/v1/', include('dj_rest_auth.urls')), # Authentication endpoints (login, logout, etc.)
-    path('', public_index),
+    path("admin/", admin.site.urls),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/blacklist/", TokenBlacklistView.as_view(), name="token_blacklist"),
+    path("api/token/verify", TokenVerifyView.as_view(), name="token_verify"),
+    path("api/whoami/", whoiam),
+    path("", public_index),
 ]
 
+urlpatterns += router.urls
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
