@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { DataGridDetailsButton } from "../../components/buttons/Buttons";
+import {
+  DataGridDetailsButton,
+  DataGridMapButton,
+} from "../../components/buttons/Buttons";
 import { useQuery } from "react-query";
 import { Api } from "../../api/client";
 import { useTranslation } from "react-i18next";
@@ -29,7 +32,16 @@ const PropertiesDataGrid = () => {
     {
       field: "actions",
       headerName: t("properties.list.datagrid.actions"),
-      renderCell: (params) => <DataGridDetailsButton id={params.id} />,
+      renderCell: (params) => {
+        return (
+          <Stack direction="row">
+            <DataGridDetailsButton id={params.id} />
+            {
+              params.row.geodata?<DataGridMapButton id={params.id} />:<></>
+            }
+          </Stack>
+        );
+      },
     },
   ];
 
@@ -57,13 +69,17 @@ const PropertiesDataGrid = () => {
       </Box>
     );
 
-  if (listProperties.isError){
+  if (listProperties.isError) {
     const errorCode = listProperties?.error?.code;
-    switch(errorCode){
+    switch (errorCode) {
       case "ERR_NETWORK":
-        return <Typography>{t("errors.network.default")}</Typography>
+        return <Typography>{t("errors.network.default")}</Typography>;
       default:
-        return <Typography>Error: {listProperties?.error?.response?.data?.detail}</Typography>
+        return (
+          <Typography>
+            Error: {listProperties?.error?.response?.data?.detail}
+          </Typography>
+        );
     }
   }
 
@@ -71,6 +87,7 @@ const PropertiesDataGrid = () => {
     id: o.id,
     name: o.name,
     company: o.company_name,
+    geodata: o.geodata,
     created_on: formatDate(new Date(o.created_on)),
   }));
 
