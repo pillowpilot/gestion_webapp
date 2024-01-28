@@ -1,71 +1,75 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Grid,
-  Input,
   MenuItem,
   Paper,
-  Select,
   Stack,
-  Typography,
   Alert,
+  TextField,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { useQuery } from "react-query";
+import { MuiFileInput } from "mui-file-input";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import AuthContext from "../../contexts/AuthProvider";
 import { Api } from "../../api/client";
+
+const FormErrorMessage = ({ flag, msg }) =>
+  flag ? <Alert severity="error">{msg}</Alert> : <></>;
+
+const SuccessfullSubmitMessage = ({ flag }) => {
+  const { t } = useTranslation();
+  if (!flag) return <></>;
+  return (
+    <Alert severity="success">{t("properties.create.createSuccessMsg")}</Alert>
+  );
+};
 
 const InferenceForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
 
-  const [feedback, setFeedback] = useState(null);
-  const [availableLots, setAvailableLots] = useState([]);
+  const formMethods = useForm();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    control,
+    formState: { errors, isSubmitSuccessful },
+  } = formMethods;
 
-  const { register, handleSubmit, reset } = useForm();
+  const listLotsQuery = useQuery("lots", Api.listLots);
+
   const onSubmitHandler = async (data) => {
-    const image = data.image[0];
-    const model = data.model;
-    const lot = data.lot;
-    console.log(data);
 
     try {
-      const response = await Api.createInference({
-        image: image,
-        model: model,
-        lot: lot,
-      });
-      console.log(response);
-      setFeedback({
-        type: "success",
-        message: t("inferences.create.successMsg"),
+      await Api.createInference({
+        image: data.image,
+        model: data.model,
+        lot: data.lot,
       });
     } catch (err) {
-      const errorMsg = err?.response?.data?.detail;
-      setFeedback({
-        type: "error",
-        message: errorMsg? errorMsg : t("inferences.create.errorMsg"),
-      });
+      const errorsData = err.response.data;
+      if (errorsData.detail)
+        setError("root.serverError", {
+          type: "400",
+          message: errorsData.detail,
+        });
+      if (errorsData.model)
+        setError("model", { type: "400", message: errorsData.model });
+      if (errorsData.lot)
+        setError("lot", { type: "400", message: errorsData.lot });
+      if (errorsData.image)
+        setError("image", { type: "400", message: errorsData.image });
     }
-
-    reset();
   };
 
-  useEffect(() => {
-    const fetchLots = async () => {
-      const lots = (await Api.retrieveCompanyLots(auth.company.id)).data;
-      console.log(lots);
-      setAvailableLots(lots);
-    };
-    try {
-      fetchLots();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  if (listLotsQuery.isLoading) return <p>Loading...</p>;
+  if (listLotsQuery.isError) return <p>Error :(</p>;
+
+  const lots = listLotsQuery.data.data.results;
   return (
     <Paper
       sx={{
@@ -74,10 +78,14 @@ const InferenceForm = () => {
     >
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <Stack spacing={5}>
-          <Typography variant="h5">
-            {t("inferences.create.labels.inferenceModel")}
-          </Typography>
-          <Select {...register("model")} required defaultValue={"leaves"}>
+          <TextField
+            select
+            label={t("inferences.create.labels.inferenceModel")}
+            {...register("model", { required: "model required" })}
+            error={errors.model}
+            helperText={errors.model?.message}
+            defaultValue={"leaves"}
+          >
             <MenuItem value={"leaves"}>
               {t("inferences.create.options.leavesDiseases")}
             </MenuItem>
@@ -87,36 +95,53 @@ const InferenceForm = () => {
             <MenuItem value={"tree_counting"}>
               {t("inferences.create.options.treeCounting")}
             </MenuItem>
-          </Select>
-          <Typography variant="h5">
-            {t("inferences.create.labels.lot")}
-          </Typography>
-          {availableLots.length > 0 ? (
-            <Select
-              {...register("lot")}
-              required
-              defaultValue={availableLots[0].id}
-            >
-              {availableLots.map((lot) => {
-                return (
-                  <MenuItem value={lot.id} key={lot.id}>
-                    {lot.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          ) : (
-            <span>Loading...</span>
-          )}
-          <Typography variant="h5">
-            {t("inferences.create.labels.inputImage")}
-          </Typography>
-          <Input {...register("image")} required type="file" accept="image/*" />
-          {(() => {
-            if (feedback === null) return <></>;
-            const alertSeverity = feedback.type;
-            return <Alert severity={alertSeverity}>{feedback.message}</Alert>;
-          })()}
+          </TextField>
+
+          <TextField
+            select
+            label={t("inferences.create.labels.lot")}
+            {...register("lot", { required: "inferences.create.errors.requiredLot" })}
+            error={errors.lot}
+            helperText={errors.lot?.message}
+            defaultValue={lots[0].id}
+          >
+            {lots.map((lot) => (
+              <MenuItem key={lot.id} value={lot.id}>
+                {lot.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <Controller
+            name="image"
+            control={control}
+            rules={{
+              required: t("inferences.create.errors.requiredImage"),
+            }}
+            render={({ field, fieldState }) => {
+              console.log("field", field);
+              console.log("fieldState", fieldState);
+              return (
+                <MuiFileInput
+                  {...field}
+                  label={t("inferences.create.labels.inputImage")}
+                  inputProps={{ accept: "image/*" }}
+                  error={fieldState.invalid}
+                  helperText={
+                    fieldState.invalid ? fieldState.error?.message : ""
+                  }
+                />
+              );
+            }}
+          />
+
+          <FormErrorMessage
+            flag={errors.root?.serverError}
+            msg={errors.root?.serverError?.message}
+          />
+
+          <SuccessfullSubmitMessage flag={isSubmitSuccessful} />
+
           <Stack direction="row" justifyContent="center" gap={1}>
             <Button
               variant="outlined"
