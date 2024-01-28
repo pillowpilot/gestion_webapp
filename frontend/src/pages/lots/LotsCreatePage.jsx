@@ -1,60 +1,111 @@
-import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Paper,
   Stack,
   Typography,
   TextField,
-  Select, Alert,
+  Alert,
   MenuItem,
+  Skeleton,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import AuthContext from "../../contexts/AuthProvider";
 import { Api } from "../../api/client";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
 
-const LotDataForm = ({
-  register,
-  handleSubmit,
-  onSubmitHandler,
-  availableProperties,
-  feedback, setFeedback
-}) => {
+const FormErrorMessage = ({ flag, msg }) =>
+  flag ? <Alert severity="error">{msg}</Alert> : <></>;
+
+const SuccessfullSubmitMessage = ({ flag }) => {
+  const { t } = useTranslation();
+  if (!flag) return <></>;
+  return (
+    <Alert severity="success">{t("properties.create.createSuccessMsg")}</Alert>
+  );
+};
+
+const LoadingForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  return (
+    <Stack
+      spacing={3}
+      sx={{
+        sm: { minWidth: "350px" },
+      }}
+    >
+      <Skeleton variant="rounded" height={55} />
+      <Skeleton variant="rounded" height={55} />
+      <Stack direction="row" justifyContent="center" gap={1}>
+        <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
+          {t("lots.create.goBackBtn")}
+        </Button>
+        <Button variant="contained" type="submit">
+          {t("lots.create.saveBtn")}
+        </Button>
+      </Stack>
+    </Stack>
+  );
+};
+
+const Form = ({ properties, formMethods, onSubmitHandler, feedback }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+  } = formMethods;
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
       <Stack
         spacing={3}
         sx={{
-          minWidth: "350px",
+          md: {
+            minWidth: "350px",
+          },
         }}
       >
-        <TextField required label="Name" {...register("name")} />
-        {availableProperties?.length > 0 ? (
-          <Select
-            {...register("parcel")}
-            required
-            defaultValue={availableProperties[0].id}
-          >
-            {availableProperties?.map((property) => {
-              return (
-                <MenuItem value={property.id} key={property.id}>
-                  {property.name}
-                </MenuItem>
-              );
+        <TextField
+          label={t("lots.create.labels.name")}
+          {...register("name", {
+            required: t("lots.create.errors.requiredName"),
+          })}
+          error={errors.name}
+          helperText={errors.name?.message}
+        />
+        {properties?.length > 0 ? (
+          <TextField
+            select
+            label={t("lots.create.labels.property")}
+            {...register("parcel", {
+              required: t("lots.create.errors.requiredProperty"),
             })}
-          </Select>
+            defaultValue={properties[0].id}
+            error={errors.parcel}
+            helperText={errors.parcel?.message}
+          >
+            {properties?.map((property) => (
+              <MenuItem key={property.id} value={property.id}>
+                {property.name}
+              </MenuItem>
+            ))}
+          </TextField>
         ) : (
-          <span>Loading...</span>
+          <Alert severity="info">
+            {t("lots.create.errors.noPropertiesMsg")}
+          </Alert>
         )}
-        {(() => {
-            if (feedback === null) return <></>;
-            const alertSeverity = feedback.type;
-            return <Alert severity={alertSeverity}>{feedback.message}</Alert>;
-          })()}
+        <FormErrorMessage
+          flag={errors.root?.serverError}
+          msg={errors.root?.serverError?.message}
+        />
+        <SuccessfullSubmitMessage flag={isSubmitSuccessful} />
         <Stack direction="row" justifyContent="center" gap={1}>
           <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
             {t("lots.create.goBackBtn")}
@@ -70,52 +121,41 @@ const LotDataForm = ({
 
 const NewLotPage = () => {
   const { t } = useTranslation();
-  const { auth } = useContext(AuthContext);
-  const [availableProperties, setAvailableProperties] = useState([]);
-  const { register, handleSubmit } = useForm();
+  const formMethods = useForm();
 
-  const [feedback, setFeedback] = useState(null);
+  const listPropertiesQuery = useQuery("properties", Api.listProperties);
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      const data = (await Api.listProperties()).data?.results;
-      console.log(data);
-      setAvailableProperties(
-        data.map((property) => ({
-          id: property.id,
-          name: property.name,
-        }))
-      );
-    };
+  if (listPropertiesQuery.isLoading)
+    return (
+      <Stack spacing={10}>
+        <Typography variant="h4">{t("lots.create.header")}</Typography>
+        <Stack direction="row" justifyContent="center">
+          <Paper sx={{ p: 5 }}>
+            <LoadingForm />
+          </Paper>
+        </Stack>
+      </Stack>
+    );
 
-    try {
-      fetchProperties();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
+  const { setError } = formMethods;
   const onSubmitHandler = async (data) => {
     const name = data.name;
-    console.log(data);
     try {
-      const response = await Api.createLot({
+      await Api.createLot({
         name: name,
-        company: auth.company.id,
         parcel: data.parcel,
       });
-      console.log(response);
-      setFeedback({
-        type: "success",
-        message: t("lots.create.createSuccessMsg"),
-      });
     } catch (err) {
-      console.log(err);
-      const errorMsg = err?.response?.data?.detail;
-      setFeedback({
-        type: "error",
-        message: errorMsg ? errorMsg : t("lots.create.createErrorMsg"),
-      });
+      const errorsData = err.response.data;
+      if (errorsData.detail)
+        setError("root.serverError", {
+          type: "400",
+          message: errorsData.detail,
+        });
+      if (errorsData.name)
+        setError("name", { type: "400", message: errorsData.name });
+      if (errorsData.parcel)
+        setError("parcel", { type: "400", message: errorsData.parcel });
     }
   };
 
@@ -124,13 +164,10 @@ const NewLotPage = () => {
       <Typography variant="h4">{t("lots.create.header")}</Typography>
       <Stack direction="row" justifyContent="center">
         <Paper sx={{ p: 5 }}>
-          <LotDataForm
-            register={register}
-            handleSubmit={handleSubmit}
+          <Form
+            properties={listPropertiesQuery.data?.data?.results}
+            formMethods={formMethods}
             onSubmitHandler={onSubmitHandler}
-            availableProperties={availableProperties}
-            feedback={feedback}
-            setFeedback={setFeedback}
           />
         </Paper>
       </Stack>
