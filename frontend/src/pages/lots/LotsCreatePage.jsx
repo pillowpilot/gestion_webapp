@@ -78,7 +78,7 @@ const NewLotPage = () => {
 
   useEffect(() => {
     const fetchProperties = async () => {
-      const data = (await Api.retrieveCompanyParcels(auth.company.id)).data;
+      const data = (await Api.listProperties()).data?.results;
       console.log(data);
       setAvailableProperties(
         data.map((property) => ({
