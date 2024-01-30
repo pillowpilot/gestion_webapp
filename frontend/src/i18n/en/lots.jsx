@@ -12,6 +12,15 @@ const t = {
   },
   create: {
     header: "Create a new Lot",
+    labels: {
+      name: "Name",
+      property: "Property",
+    },
+    errors: {
+      requiredName: "Name is required",
+      requiredProperty: "Property is required",
+      noPropertiesMsg: "No properties found",
+    },
     saveBtn: "Save",
     goBackBtn: "Go back",
     createSuccessMsg: "Lot created successfully",
@@ -24,6 +33,10 @@ const t = {
     updateSuccessMsg: "Lot updated successfully",
     updateErrorMsg: "Error updating lot",
   },
+  map: {
+    header: "Lot map",
+    goBackBtn: "Go back",
+  }
 };
 
 export default t;

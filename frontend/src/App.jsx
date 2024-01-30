@@ -11,8 +11,9 @@ import PropertyDetailsPage from './pages/properties/PropertiesDetailsPage';
 import PropertiesMapPage from './pages/properties/PropertiesMapPage';
 import NewPropertyPage from './pages/properties/create/PropertiesCreatePage';
 import LotsPage from './pages/lots/LotsListPage';
-import NewLotPage from './pages/lots/LotsCreatePage';
+import NewLotPage from './pages/lots/create/LotsCreatePage';
 import LotDetailsPage from './pages/lots/LotsDetailsPage';
+import LotsMapPage from './pages/lots/LotsMapPage';
 import UsersPage from './pages/users/UsersListPage';
 import UserDetailsPage from './pages/users/details/UsersDetailsPage';
 import LoginPage from './pages/login/LoginPage';
@@ -101,7 +102,16 @@ const router = createBrowserRouter([
           },
           {
             path: ":id",
-            element: <LotDetailsPage />
+            children: [
+              {
+                path: "",
+                element: <LotDetailsPage />,
+              },
+              {
+                path: "map",
+                element: <LotsMapPage />
+              }
+            ]
           },
           {
             path: "new",
