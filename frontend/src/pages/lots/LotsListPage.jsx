@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { DataGridDetailsButton } from "../../components/buttons/Buttons";
+import {
+  DataGridDetailsButton,
+  DataGridMapButton,
+} from "../../components/buttons/Buttons";
 import { Api } from "../../api/client";
 import { useQuery } from "react-query";
 import { useTranslation } from "react-i18next";
@@ -26,7 +29,14 @@ const LotsDataGrid = () => {
     {
       field: "actions",
       headerName: t("lots.list.datagrid.actions"),
-      renderCell: (params) => <DataGridDetailsButton id={params.id} />,
+      renderCell: (params) => (
+        <Stack direction="row">
+          <DataGridDetailsButton id={params.id} />
+          {
+            params.row.geodata ? <DataGridMapButton id={params.id} /> : <></>
+          }
+        </Stack>
+      ),
     },
   ];
 
@@ -42,26 +52,31 @@ const LotsDataGrid = () => {
 
   const listLots = useQuery("lots", Api.listLots);
 
-  if (listLots.isLoading) return (
-    <Box>
-      <DataGrid
-        loading
-        rows={[]}
-        columns={columns}
-        sx={{
-          height: "500px",
-        }}
-      />
-    </Box>
-  );
+  if (listLots.isLoading)
+    return (
+      <Box>
+        <DataGrid
+          loading
+          rows={[]}
+          columns={columns}
+          sx={{
+            height: "500px",
+          }}
+        />
+      </Box>
+    );
 
   if (listLots.isError) {
     const errorCode = listLots?.error?.code;
-    switch(errorCode){
+    switch (errorCode) {
       case "ERR_NETWORK":
-        return <Typography>{t("errors.network.default")}</Typography>
+        return <Typography>{t("errors.network.default")}</Typography>;
       default:
-        return <Typography>Error: {listLots?.error?.response?.data?.detail}</Typography>
+        return (
+          <Typography>
+            Error: {listLots?.error?.response?.data?.detail}
+          </Typography>
+        );
     }
   }
 
@@ -69,6 +84,7 @@ const LotsDataGrid = () => {
     id: o.id,
     name: o.name,
     property: o.parcel_name,
+    geodata: o.geodata,
     created_on: formatDate(new Date(o.created_on)),
   }));
 
