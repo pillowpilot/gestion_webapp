@@ -12,6 +12,14 @@ const t = {
   },
   create: {
     header: "Crear una nueva finca",
+    labels: {
+      name: "Nombre",
+      geodata: "Geolocalizacion",
+    },
+    errors: {
+      requiredName: "El nombre es obligatorio",
+      requiredGeodata: "La geolocalizacion es obligatoria",
+    },
     saveBtn: "Guardar",
     goBackBtn: "Volver",
     createSuccessMsg: "Finca creada correctamente",
@@ -19,11 +27,23 @@ const t = {
   },
   details: {
     header: "Detalles de la finca",
+    labels: {
+      name: "Nombre",
+      geodata: "Geolocalizacion",
+    },
+    errors: {
+      requiredName: "El nombre es obligatorio",
+      requiredGeodata: "La geolocalizacion es obligatoria",
+    },
     saveBtn: "Guardar",
     goBackBtn: "Volver",
     updateSuccessMsg: "Finca actualizada correctamente",
     updateErrorMsg: "Error actualizando finca",
   },
+  map: {
+    header: "Mapa de la finca",
+    goBackBtn: "Volver",
+  }
 };
 
 export default t;

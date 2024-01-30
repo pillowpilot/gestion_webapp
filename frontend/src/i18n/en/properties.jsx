@@ -12,6 +12,14 @@ const t = {
   },
   create: {
     header: "Create a new property",
+    labels: {
+      name: "Name",
+      geodata: "Geodata",
+    },
+    errors: {
+      requiredName: "Name is required",
+      requiredGeodata: "Geodata is required",
+    },
     saveBtn: "Save",
     goBackBtn: "Go back",
     createSuccessMsg: "Property created successfully",
@@ -19,11 +27,23 @@ const t = {
   },
   details: {
     header: "Property's details",
+    labels: {
+      name: "Name",
+      geodata: "Geodata",
+    },
+    errors: {
+      requiredName: "Name is required",
+      requiredGeodata: "Geodata is required",
+    },
     saveBtn: "Save",
     goBackBtn: "Go back",
     updateSuccessMsg: "Property updated successfully",
     updateErrorMsg: "Error updating property",
   },
+  map: {
+    header: "Property map",
+    goBackBtn: "Go back",
+  }
 };
 
 export default t;
