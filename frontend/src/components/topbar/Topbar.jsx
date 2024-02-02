@@ -42,6 +42,47 @@ const pages = [
   },
 ];
 
+const LanguageOptions = () => {
+  const { i18n } = useTranslation();
+
+  const activeOptionStyle = {
+    bgcolor: "primary.main",
+    color: "primary.contrastText",
+    "&:hover": {
+      bgcolor: "primary.main",
+      color: "primary.contrastText",
+    },
+  };
+
+  return (
+    <>
+      <MenuItem
+        onClick={() => i18n.changeLanguage("en")}
+        sx={i18n.language === "en" && activeOptionStyle}
+      >
+        <ListItemIcon>
+          <SvgIcon>
+            <US />
+          </SvgIcon>
+        </ListItemIcon>
+        <Typography variant="inherit">English</Typography>
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => i18n.changeLanguage("es")}
+        sx={i18n.language === "es" && activeOptionStyle}
+      >
+        <ListItemIcon>
+          <SvgIcon>
+            <PY />
+          </SvgIcon>
+        </ListItemIcon>
+        <Typography variant="inherit">Español</Typography>
+      </MenuItem>
+    </>
+  );
+};
+
 const AvatarButton = ({ src = "" }) => {
   const { t } = useTranslation();
 
