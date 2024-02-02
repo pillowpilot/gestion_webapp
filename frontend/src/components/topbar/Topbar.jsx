@@ -42,22 +42,6 @@ const pages = [
   },
 ];
 
-const settings = [
-  {
-    i18n: "topbar.profile",
-    to: "profile",
-    icon: Avatar,
-  },
-  {
-    isDivider: true,
-  },
-  {
-    i18n: "topbar.logout",
-    to: "logout",
-    icon: Logout,
-  },
-];
-
 const AvatarButton = ({ src = "" }) => {
   const { t } = useTranslation();
 
@@ -81,6 +65,8 @@ const AvatarButton = ({ src = "" }) => {
         id="account-menu"
         open={Boolean(anchorElement)}
         anchorEl={anchorElement}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         onClose={handleCloseAccountMenu}
       >
         <MenuItem component={NavLink} to={"profile"} onClick={handleCloseAccountMenu}>
