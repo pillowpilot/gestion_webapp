@@ -28,6 +28,13 @@ const t = {
   },
   details: {
     header: "Lot's details",
+    labels: {
+      name: "Name",
+    },
+    errors: {
+      requiredName: "Name is required",
+      requiredProperty: "Property is required",
+    },
     saveBtn: "Save",
     goBackBtn: "Go back",
     updateSuccessMsg: "Lot updated successfully",

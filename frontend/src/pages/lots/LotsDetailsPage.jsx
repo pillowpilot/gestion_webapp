@@ -44,18 +44,16 @@ const LoadingLotForm = () => {
   const navigate = useNavigate();
 
   return (
-    <Stack>
-      <Stack spacing={5}>
-        <Skeleton variant="rounded" width={420} height={60} />
-        <Skeleton variant="rounded" width={420} height={60} />
-        <Stack direction="row" justifyContent="center" gap={1}>
-          <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
-            {t("lots.details.goBackBtn")}
-          </Button>
-          <Button disabled type="submit" variant="contained">
-            {t("lots.details.saveBtn")}
-          </Button>
-        </Stack>
+    <Stack spacing={5}>
+      <Skeleton variant="rounded" width={420} height={60} />
+      <Skeleton variant="rounded" width={420} height={60} />
+      <Stack direction="row" justifyContent="center" gap={1}>
+        <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
+          {t("lots.details.goBackBtn")}
+        </Button>
+        <Button disabled type="submit" variant="contained">
+          {t("lots.details.saveBtn")}
+        </Button>
       </Stack>
     </Stack>
   );
@@ -67,7 +65,11 @@ const LotForm = ({ propertiesData, data, mutation }) => {
 
   const [currentPropertyId, setCurrentPropertyId] = useState(data?.parcel);
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       name: data.name,
       propertyName: data.parcel_name,
@@ -87,45 +89,44 @@ See: https://stackoverflow.com/a/76688881
 */
 
   return (
-    <Stack>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          width: "100%",
-        }}
-      >
-        <Stack spacing={5}>
-          <TextField
-            {...register("name")}
-            required
-            label="Name"
-            InputLabelProps={{ shrink: true }}
-          />
-          <Select
-            {...register("property")}
-            required
-            defaultValue={currentPropertyId}
-          >
-            {propertiesData.map((o) => (
-              <MenuItem key={o.id} value={o.id}>{`${o.name}`}</MenuItem>
-            ))}
-          </Select>
-          <FeedbackAlert mutation={mutation} />
-          <Stack direction="row" justifyContent="center" gap={1}>
-            <Button
-              variant="outlined"
-              size="medium"
-              onClick={() => navigate(-1)}
-            >
-              {t("lots.details.goBackBtn")}
-            </Button>
-            <Button type="submit" variant="contained">
-              {t("lots.details.saveBtn")}
-            </Button>
-          </Stack>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{
+        width: "100%",
+      }}
+    >
+      <Stack spacing={5}>
+        <TextField
+          {...register("name", {
+            required: t("lots.details.errors.requiredName"),
+          })}
+          label={t("lots.details.labels.name")}
+          InputLabelProps={{ shrink: true }}
+          error={errors.name}
+          helperText={errors.name?.message}
+        />
+        <Select
+          {...register("property", {
+            required: t("lots.details.errors.requiredProperty"),
+          })}
+          defaultValue={currentPropertyId}
+          error={errors.property}
+        >
+          {propertiesData.map((o) => (
+            <MenuItem key={o.id} value={o.id}>{`${o.name}`}</MenuItem>
+          ))}
+        </Select>
+        <FeedbackAlert mutation={mutation} />
+        <Stack direction="row" justifyContent="center" gap={1}>
+          <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
+            {t("lots.details.goBackBtn")}
+          </Button>
+          <Button type="submit" variant="contained">
+            {t("lots.details.saveBtn")}
+          </Button>
         </Stack>
-      </form>
-    </Stack>
+      </Stack>
+    </form>
   );
 };
 
@@ -140,34 +141,40 @@ const LotDetailsPage = () => {
     mutationFn: (data) => Api.updateLot(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(["lots"]);
-    }
+    },
   });
 
   if (retrieveLot.isLoading || listProperties.isLoading)
     return (
       <Stack spacing={10}>
-        <Typography variant="h4">{t("lots.details.header")}</Typography>
         <Stack direction="row" justifyContent="center">
           <Box sx={{ width: 500 }}>
             <Paper sx={{ p: 5 }}>
-              <LoadingLotForm />
+              <Stack gap={5}>
+                <Typography variant="h4">{t("lots.details.header")}</Typography>
+                <LoadingLotForm />
+              </Stack>
             </Paper>
           </Box>
         </Stack>
       </Stack>
     );
 
+  // TODO Add error handling
+
   return (
     <Stack spacing={10}>
-      <Typography variant="h4">{t("lots.details.header")}</Typography>
       <Stack direction="row" justifyContent="center">
         <Box sx={{ width: 500 }}>
           <Paper sx={{ p: 5 }}>
-            <LotForm
-              propertiesData={listProperties.data?.data?.results}
-              data={retrieveLot.data?.data}
-              mutation={mutation}
-            />
+            <Stack gap={5}>
+              <Typography variant="h4">{t("lots.details.header")}</Typography>
+              <LotForm
+                propertiesData={listProperties.data?.data?.results}
+                data={retrieveLot.data?.data}
+                mutation={mutation}
+              />
+            </Stack>
           </Paper>
         </Box>
       </Stack>

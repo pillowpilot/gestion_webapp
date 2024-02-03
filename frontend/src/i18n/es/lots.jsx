@@ -28,6 +28,13 @@ const t = {
   },
   details: {
     header: "Detalles del lote",
+    labels: {
+      name: "Nombre",
+    },
+    errors: {
+      requiredName: "El nombre es obligatorio",
+      requiredProperty: "La finca es obligatoria",
+    },
     saveBtn: "Guardar",
     goBackBtn: "Volver",
     updateSuccessMsg: "Lote actualizado correctamente",
