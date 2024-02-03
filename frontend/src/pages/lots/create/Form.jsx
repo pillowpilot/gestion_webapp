@@ -1,28 +1,22 @@
 import React from "react";
+import { Button, Stack, TextField, Alert, MenuItem, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Alert,
-  Stack,
-  TextField,
-} from "@mui/material";
 import { Controller } from "react-hook-form";
+import { withTranslation } from 'react-i18next';
 import { MuiFileInput } from 'mui-file-input';
-import { useTranslation, withTranslation } from "react-i18next";
 
 
 const FormErrorMessage = ({ flag, msg }) =>
   flag ? <Alert severity="error">{msg}</Alert> : <></>;
 
-const SuccessfullSubmitMessage = ({ flag }) => {
-  const { t } = useTranslation();
+const SuccessfullSubmitMessage = ({ t, flag }) => {
   if (!flag) return <></>;
   return (
     <Alert severity="success">{t("properties.create.createSuccessMsg")}</Alert>
   );
 };
 
-const Form = ({ t, formMethods, onSubmitHandler }) => {
+const Form = ({ t, properties, formMethods, onSubmitHandler }) => {
   const navigate = useNavigate();
 
   const {
@@ -37,26 +31,45 @@ const Form = ({ t, formMethods, onSubmitHandler }) => {
       <Stack
         spacing={3}
         sx={{
-          sm: {minWidth: "350px",}
+          md: {
+            minWidth: "350px",
+          },
         }}
       >
         <TextField
-          label={t("properties.create.labels.name")}
+          label={t("lots.create.labels.name")}
           {...register("name", {
-            required: t("properties.create.errors.requiredName"),
+            required: t("lots.create.errors.requiredName"),
           })}
           error={errors.name}
           helperText={errors.name?.message}
         />
+        {properties?.length > 0 ? (
+          <TextField
+            select
+            label={t("lots.create.labels.property")}
+            {...register("parcel", {
+              required: t("lots.create.errors.requiredProperty"),
+            })}
+            defaultValue={properties[0].id}
+            error={errors.parcel}
+            helperText={errors.parcel?.message}
+          >
+            {properties?.map((property) => (
+              <MenuItem key={property.id} value={property.id}>
+                {property.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <Alert severity="info">
+            {t("lots.create.errors.noPropertiesMsg")}
+          </Alert>
+        )}
         <Controller 
           name="geodata"
           control={control}
-          rules={{
-            required: t("properties.create.errors.requiredGeodata"),
-          }}
           render={({field, fieldState}) => {
-            console.log("field", field);
-            console.log("fieldState", fieldState);
             return <MuiFileInput {...field} 
               label={t("properties.create.labels.geodata")}
               inputProps={{ accept: ".geojson" }}
@@ -69,13 +82,13 @@ const Form = ({ t, formMethods, onSubmitHandler }) => {
           flag={errors.root?.serverError}
           msg={errors.root?.serverError?.message}
         />
-        <SuccessfullSubmitMessage flag={isSubmitSuccessful} />
+        <SuccessfullSubmitMessage t={t} flag={isSubmitSuccessful} />
         <Stack direction="row" justifyContent="center" gap={1}>
           <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
-            {t("properties.create.goBackBtn")}
+            {t("lots.create.goBackBtn")}
           </Button>
-          <Button variant="contained" type="submit" data-testid="submit-btn">
-            {t("properties.create.saveBtn")}
+          <Button variant="contained" type="submit">
+            {t("lots.create.saveBtn")}
           </Button>
         </Stack>
       </Stack>

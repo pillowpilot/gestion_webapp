@@ -11,7 +11,7 @@ const t = {
     },
   },
   create: {
-    header: "Create a new property",
+    header: "New Property",
     labels: {
       name: "Name",
       geodata: "Geodata",

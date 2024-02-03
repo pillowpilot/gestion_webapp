@@ -11,7 +11,7 @@ const t = {
     },
   },
   create: {
-    header: "Create a new Lot",
+    header: "New Lot",
     labels: {
       name: "Name",
       property: "Property",

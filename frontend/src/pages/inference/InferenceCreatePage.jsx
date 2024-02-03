@@ -7,6 +7,7 @@ import {
   Stack,
   Alert,
   TextField,
+  Typography,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useForm, Controller } from "react-hook-form";
@@ -43,7 +44,6 @@ const InferenceForm = () => {
   const listLotsQuery = useQuery("lots", Api.listLots);
 
   const onSubmitHandler = async (data) => {
-
     try {
       await Api.createInference({
         image: data.image,
@@ -76,91 +76,96 @@ const InferenceForm = () => {
         padding: 5,
       }}
     >
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <Stack spacing={5}>
-          <TextField
-            select
-            label={t("inferences.create.labels.inferenceModel")}
-            {...register("model", { required: "model required" })}
-            error={errors.model}
-            helperText={errors.model?.message}
-            defaultValue={"leaves"}
-          >
-            <MenuItem value={"leaves"}>
-              {t("inferences.create.options.leavesDiseases")}
-            </MenuItem>
-            <MenuItem value={"fruits"}>
-              {t("inferences.create.options.fruitsDiseases")}
-            </MenuItem>
-            <MenuItem value={"tree_counting"}>
-              {t("inferences.create.options.treeCounting")}
-            </MenuItem>
-          </TextField>
-
-          <TextField
-            select
-            label={t("inferences.create.labels.lot")}
-            {...register("lot", { required: "inferences.create.errors.requiredLot" })}
-            error={errors.lot}
-            helperText={errors.lot?.message}
-            defaultValue={lots[0].id}
-          >
-            {lots.map((lot) => (
-              <MenuItem key={lot.id} value={lot.id}>
-                {lot.name}
+      <Stack spacing={5}>
+        <Typography variant="h4">{t("inferences.create.header")}</Typography>
+        <form onSubmit={handleSubmit(onSubmitHandler)}>
+          <Stack spacing={5}>
+            <TextField
+              select
+              label={t("inferences.create.labels.inferenceModel")}
+              {...register("model", { required: "model required" })}
+              error={errors.model}
+              helperText={errors.model?.message}
+              defaultValue={"leaves"}
+            >
+              <MenuItem value={"leaves"}>
+                {t("inferences.create.options.leavesDiseases")}
               </MenuItem>
-            ))}
-          </TextField>
+              <MenuItem value={"fruits"}>
+                {t("inferences.create.options.fruitsDiseases")}
+              </MenuItem>
+              <MenuItem value={"tree_counting"}>
+                {t("inferences.create.options.treeCounting")}
+              </MenuItem>
+            </TextField>
 
-          <Controller
-            name="image"
-            control={control}
-            rules={{
-              required: t("inferences.create.errors.requiredImage"),
-            }}
-            render={({ field, fieldState }) => {
-              console.log("field", field);
-              console.log("fieldState", fieldState);
-              return (
-                <MuiFileInput
-                  {...field}
-                  label={t("inferences.create.labels.inputImage")}
-                  inputProps={{ accept: "image/*" }}
-                  error={fieldState.invalid}
-                  helperText={
-                    fieldState.invalid ? fieldState.error?.message : ""
-                  }
-                />
-              );
-            }}
-          />
-
-          <FormErrorMessage
-            flag={errors.root?.serverError}
-            msg={errors.root?.serverError?.message}
-          />
-
-          <SuccessfullSubmitMessage flag={isSubmitSuccessful} />
-
-          <Stack direction="row" justifyContent="center" gap={1}>
-            <Button
-              variant="outlined"
-              size="medium"
-              onClick={() => navigate(-1)}
+            <TextField
+              select
+              label={t("inferences.create.labels.lot")}
+              {...register("lot", {
+                required: "inferences.create.errors.requiredLot",
+              })}
+              error={errors.lot}
+              helperText={errors.lot?.message}
+              defaultValue={lots[0].id}
             >
-              {t("inferences.create.goBackBtn")}
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              size="medium"
-              endIcon={<SendIcon />}
-            >
-              {t("inferences.create.inferBtn")}
-            </Button>
+              {lots.map((lot) => (
+                <MenuItem key={lot.id} value={lot.id}>
+                  {lot.name}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <Controller
+              name="image"
+              control={control}
+              rules={{
+                required: t("inferences.create.errors.requiredImage"),
+              }}
+              render={({ field, fieldState }) => {
+                console.log("field", field);
+                console.log("fieldState", fieldState);
+                return (
+                  <MuiFileInput
+                    {...field}
+                    label={t("inferences.create.labels.inputImage")}
+                    inputProps={{ accept: "image/*" }}
+                    error={fieldState.invalid}
+                    helperText={
+                      fieldState.invalid ? fieldState.error?.message : ""
+                    }
+                  />
+                );
+              }}
+            />
+
+            <FormErrorMessage
+              flag={errors.root?.serverError}
+              msg={errors.root?.serverError?.message}
+            />
+
+            <SuccessfullSubmitMessage flag={isSubmitSuccessful} />
+
+            <Stack direction="row" justifyContent="center" gap={1}>
+              <Button
+                variant="outlined"
+                size="medium"
+                onClick={() => navigate(-1)}
+              >
+                {t("inferences.create.goBackBtn")}
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                size="medium"
+                endIcon={<SendIcon />}
+              >
+                {t("inferences.create.inferBtn")}
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
-      </form>
+        </form>
+      </Stack>
     </Paper>
   );
 };

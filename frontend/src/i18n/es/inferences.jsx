@@ -16,6 +16,7 @@ const t = {
     },
   },
   create: {
+    header: "Nueva Inferencia",
     inferBtn: "Inferir",
     goBackBtn: "Volver",
     options: {

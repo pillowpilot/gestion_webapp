@@ -1,17 +1,12 @@
 import React, { useContext } from "react";
-import {
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Api } from "../../../api/client";
 import { withTranslation } from "react-i18next";
 import AuthContext from "../../../contexts/AuthProvider";
 import Form from "./Form";
 
-
-const NewPropertyPage = ({t}) => {
+const NewPropertyPage = ({ t }) => {
   const { auth } = useContext(AuthContext);
   const formMethods = useForm();
 
@@ -31,18 +26,21 @@ const NewPropertyPage = ({t}) => {
           type: "400",
           message: errorsData.detail,
         });
+      if (errorsData.name)
+        setError("name", { type: "400", message: errorsData.name });
+      if (errorsData.geodata)
+        setError("geodata", { type: "400", message: errorsData.geodata });
     }
   };
 
   return (
     <Stack spacing={10}>
-      <Typography variant="h4">{t("properties.create.header")}</Typography>
       <Stack direction="row" justifyContent="center">
         <Paper sx={{ p: 5 }}>
-          <Form
-            formMethods={formMethods}
-            onSubmitHandler={onSubmitHandler}
-          />
+          <Stack gap={5}>
+            <Typography variant="h4">{t("properties.create.header")}</Typography>
+            <Form formMethods={formMethods} onSubmitHandler={onSubmitHandler} />
+          </Stack>
         </Paper>
       </Stack>
     </Stack>

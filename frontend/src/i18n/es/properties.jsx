@@ -11,7 +11,7 @@ const t = {
     },
   },
   create: {
-    header: "Crear una nueva finca",
+    header: "Nueva Finca",
     labels: {
       name: "Nombre",
       geodata: "Geolocalizacion",

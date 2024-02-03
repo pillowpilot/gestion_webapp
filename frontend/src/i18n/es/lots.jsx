@@ -11,7 +11,7 @@ const t = {
     },
   },
   create: {
-    header: "Crear un nuevo lote",
+    header: "Nuevo Lote",
     labels: {
       name: "Nombre",
       property: "Finca",

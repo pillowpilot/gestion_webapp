@@ -16,6 +16,7 @@ const t = {
     },
   },
   create: {
+    header: "New Inference",
     inferBtn: "Infer",
     goBackBtn: "Go back",
     labels: {
