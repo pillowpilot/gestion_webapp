@@ -11,21 +11,37 @@ from django.contrib.auth.admin import UserAdmin
 class CompanyAdmin(TenantAdminMixin, admin.ModelAdmin):
     list_display = ("id", "name", "schema_name")
 
+
 @admin.register(CompanyDomain)
 class CompanyDomainAdmin(admin.ModelAdmin):
     list_display = ("domain", "tenant")
 
+
 @admin.register(Parcel)
 class ParcelAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "company")
+    list_display = ("id", "name", "company", "created_on", "updated_on")
+
 
 @admin.register(Lot)
 class LotAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "parcel", "created_on")
+    list_display = ("id", "name", "parcel", "created_on", "updated_on")
+
 
 @admin.register(InferenceJob)
 class InferenceJobAdmin(admin.ModelAdmin):
-    list_display = ("id", "lot", "user", "model", "task_id", "status", "created_on", "latitude", "longitude")
+    list_display = (
+        "id",
+        "lot",
+        "user",
+        "model",
+        "task_id",
+        "status",
+        "latitude",
+        "longitude",
+        "created_on",
+        "updated_on",
+    )
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -36,14 +52,37 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ("email", "first_name", "last_name", "company", "is_company_manager", "is_staff", "is_active")
+    list_display = (
+        "id",
+        "email",
+        "first_name",
+        "last_name",
+        "company",
+        "is_company_manager",
+        "is_staff",
+        "is_active",
+        "created_on",
+        "updated_on",
+    )
     list_filter = (
         "email",
         "is_staff",
         "is_active",
     )
     fieldsets = (
-        (None, {"fields": ("first_name", "last_name", "email", "company", "password", "avatar")}),
+        (
+            None,
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "company",
+                    "password",
+                    "avatar",
+                )
+            },
+        ),
         (
             "Permissions",
             {
