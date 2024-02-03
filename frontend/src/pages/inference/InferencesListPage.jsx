@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Box, IconButton, Button, Chip, Paper, Typography, Stack } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
@@ -75,7 +76,7 @@ const InferencesDataGrid = () => {
       field: "actionModify",
       headerName: tx("actions"),
       renderCell: (params) => <>
-        <DataGridDetailsButton id={params.id} />
+        <DataGridDetailsButton id={params.id} icon={<SearchIcon />}/>
         <IconButton variant="contained" color="primary" onClick={()=>setDeleteDialogOpen(true)}>
           <DeleteIcon />
         </IconButton>
