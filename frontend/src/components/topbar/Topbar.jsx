@@ -12,9 +12,11 @@ import {
   IconButton,
   ListItemIcon,
   Divider,
+  SvgIcon,
 } from "@mui/material";
 import AgricultureIcon from "@mui/icons-material/Agriculture";
 import MenuIcon from "@mui/icons-material/Menu";
+import { US, PY } from "country-flag-icons/react/3x2";
 import { Logout } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -42,7 +44,7 @@ const pages = [
   },
 ];
 
-const LanguageOptions = () => {
+const LanguageOptions = ({handleCloseAccountMenu}) => {
   const { i18n } = useTranslation();
 
   const activeOptionStyle = {
@@ -57,7 +59,7 @@ const LanguageOptions = () => {
   return (
     <>
       <MenuItem
-        onClick={() => i18n.changeLanguage("en")}
+        onClick={() => {i18n.changeLanguage("en"); handleCloseAccountMenu(); }}
         sx={i18n.language === "en" && activeOptionStyle}
       >
         <ListItemIcon>
@@ -69,7 +71,7 @@ const LanguageOptions = () => {
       </MenuItem>
 
       <MenuItem
-        onClick={() => i18n.changeLanguage("es")}
+        onClick={() => {i18n.changeLanguage("es"); handleCloseAccountMenu(); }}
         sx={i18n.language === "es" && activeOptionStyle}
       >
         <ListItemIcon>
@@ -110,14 +112,26 @@ const AvatarButton = ({ src = "" }) => {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         onClose={handleCloseAccountMenu}
       >
-        <MenuItem component={NavLink} to={"profile"} onClick={handleCloseAccountMenu}>
+        <MenuItem
+          component={NavLink}
+          to={"profile"}
+          onClick={handleCloseAccountMenu}
+        >
           <Avatar sx={{ width: 28, height: 28, mr: 1 }} />
           {t("topbar.profile")}
         </MenuItem>
 
         <Divider />
 
-        <MenuItem component={NavLink} to={"logout"} onClick={handleCloseAccountMenu}>
+        <LanguageOptions handleCloseAccountMenu={handleCloseAccountMenu} />
+
+        <Divider />
+
+        <MenuItem
+          component={NavLink}
+          to={"logout"}
+          onClick={handleCloseAccountMenu}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
