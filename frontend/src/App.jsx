@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import CommonLayout from './layouts/root/RootLayout';
 import DashboardPage from './pages/dashboard/DashboardPage';
@@ -19,7 +19,7 @@ import UserDetailsPage from './pages/users/details/UsersDetailsPage';
 import LoginPage from './pages/login/LoginPage';
 import InferenceFormPage from './pages/inference/InferenceCreatePage';
 import NotFoundPage from './pages/notfound/NotFound';
-import InferencesListPage from './pages/inference/InferencesListPage';
+import InferencesListPage from './pages/inference/list/InferencesListPage';
 import InferenceDetailsPage from './pages/inference/InferenceDetailsPage';
 import UserNewPage from './pages/users/UsersNewPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -163,7 +163,8 @@ const router = createBrowserRouter([
 
 function App() {
   const { auth, setAuth } = useContext(AuthContext);
-  const theme = createTheme();
+  let theme = createTheme();
+  theme = responsiveFontSizes(theme);
 
   useEffect(() => {
     const retrieveUserDataFromServer = async () => {
