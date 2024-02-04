@@ -4,7 +4,6 @@ import {
   Typography,
   Button,
   Paper,
-  Select,
   Stack,
   TextField,
   MenuItem,
@@ -13,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Api } from "../../api/client";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -68,6 +67,7 @@ const LotForm = ({ propertiesData, data, mutation }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -105,17 +105,22 @@ See: https://stackoverflow.com/a/76688881
           error={errors.name}
           helperText={errors.name?.message}
         />
-        <Select
-          {...register("property", {
-            required: t("lots.details.errors.requiredProperty"),
-          })}
+        <Controller
+          name="property"
+          control={control}
           defaultValue={currentPropertyId}
-          error={errors.property}
-        >
-          {propertiesData.map((o) => (
-            <MenuItem key={o.id} value={o.id}>{`${o.name}`}</MenuItem>
-          ))}
-        </Select>
+          render={({ field }) => (
+            <TextField
+              select
+              {...field}
+              label={t("lots.details.labels.property")}
+            >
+              {propertiesData.map((o) => (
+                <MenuItem key={o.id} value={o.id}>{`${o.name}`}</MenuItem>
+              ))}
+            </TextField>
+          )}
+        ></Controller>
         <FeedbackAlert mutation={mutation} />
         <Stack direction="row" justifyContent="center" gap={1}>
           <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>

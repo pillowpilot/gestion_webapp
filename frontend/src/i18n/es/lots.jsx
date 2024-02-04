@@ -31,6 +31,7 @@ const t = {
     header: "Detalles del lote",
     labels: {
       name: "Nombre",
+      property: "Finca",
     },
     errors: {
       requiredName: "El nombre es obligatorio",

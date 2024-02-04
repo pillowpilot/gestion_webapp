@@ -31,6 +31,7 @@ const t = {
     header: "Lot's details",
     labels: {
       name: "Name",
+      property: "Property",
     },
     errors: {
       requiredName: "Name is required",
