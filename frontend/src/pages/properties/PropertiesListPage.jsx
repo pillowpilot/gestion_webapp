@@ -1,13 +1,14 @@
-import { Link } from "react-router-dom";
 import { Box, Button, Paper, Typography, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
+import { Api } from "../../api/client";
 import {
   DataGridDetailsButton,
   DataGridMapButton,
 } from "../../components/buttons/Buttons";
-import { useQuery } from "react-query";
-import { Api } from "../../api/client";
-import { useTranslation } from "react-i18next";
+import { DateCell } from "../../components/datagrid/Cells";
 
 const PropertiesDataGrid = () => {
   const { t } = useTranslation();
@@ -28,6 +29,12 @@ const PropertiesDataGrid = () => {
       field: "created_on",
       headerName: t("properties.list.datagrid.date"),
       width: 250,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="properties.list.datagrid.dateFormat"
+        />
+      ),
     },
     {
       field: "actions",
@@ -36,22 +43,12 @@ const PropertiesDataGrid = () => {
         return (
           <Stack direction="row">
             <DataGridDetailsButton id={params.id} />
-            {
-              params.row.geodata?<DataGridMapButton id={params.id} />:<></>
-            }
+            {params.row.geodata ? <DataGridMapButton id={params.id} /> : <></>}
           </Stack>
         );
       },
     },
   ];
-
-  const formatDate = (d) =>
-    d.toLocaleDateString("en-us", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
 
   const listProperties = useQuery("properties", Api.listProperties);
 
@@ -88,7 +85,7 @@ const PropertiesDataGrid = () => {
     name: o.name,
     company: o.company_name,
     geodata: o.geodata,
-    created_on: formatDate(new Date(o.created_on)),
+    created_on: o.created_on,
   }));
 
   return (

@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
+import { Api } from "../../api/client";
 import {
   DataGridDetailsButton,
   DataGridMapButton,
 } from "../../components/buttons/Buttons";
-import { Api } from "../../api/client";
-import { useQuery } from "react-query";
-import { useTranslation } from "react-i18next";
+import { DateCell } from "../../components/datagrid/Cells";
 
 const LotsDataGrid = () => {
   const { t } = useTranslation();
@@ -25,6 +26,12 @@ const LotsDataGrid = () => {
       field: "created_on",
       headerName: t("lots.list.datagrid.date"),
       width: 250,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="lots.list.datagrid.dateFormat"
+        />
+      ),
     },
     {
       field: "actions",
@@ -32,23 +39,11 @@ const LotsDataGrid = () => {
       renderCell: (params) => (
         <Stack direction="row">
           <DataGridDetailsButton id={params.id} />
-          {
-            params.row.geodata ? <DataGridMapButton id={params.id} /> : <></>
-          }
+          {params.row.geodata ? <DataGridMapButton id={params.id} /> : <></>}
         </Stack>
       ),
     },
   ];
-
-  const [lots, setLots] = useState([]);
-
-  const formatDate = (d) =>
-    d.toLocaleDateString("en-us", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
 
   const listLots = useQuery("lots", Api.listLots);
 
@@ -85,7 +80,7 @@ const LotsDataGrid = () => {
     name: o.name,
     property: o.parcel_name,
     geodata: o.geodata,
-    created_on: formatDate(new Date(o.created_on)),
+    created_on: o.created_on,
   }));
 
   return (

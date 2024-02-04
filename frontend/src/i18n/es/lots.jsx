@@ -7,6 +7,7 @@ const t = {
       name: "Nombre",
       property: "Finca",
       date: "Fecha",
+      dateFormat: "{{val, datetime}}",
       actions: "Acciones",
     },
   },
