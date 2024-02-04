@@ -86,7 +86,7 @@ const LotsDataGrid = () => {
   return (
     <Box>
       <DataGrid
-        checkboxSelection
+
         pageSizeOptions={[10, 25, 50, 100]}
         rows={rows}
         columns={columns}
