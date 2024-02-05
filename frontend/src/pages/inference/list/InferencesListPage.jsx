@@ -49,31 +49,25 @@ const InferencesListPage = () => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const columns = buildDataGridColumns(t, setDeleteDialogOpen);
+  // const columns = buildDataGridColumns(t, setDeleteDialogOpen);
   const listInferences = useQuery({
     queryKey: ["inferences"],
     queryFn: Api.listInferences,
     onError: (error) => {
       manageErrorsFromQuery(t, error, enqueueSnackbar);
-    }
+    },
   });
 
   if (listInferences.isSuccess)
     return (
       <PageLayout>
-        <InferencesDataGrid
-          columns={columns}
-          listInferences={listInferences}
-          deleteDialogOpen={deleteDialogOpen}
-          setDeleteDialogOpen={setDeleteDialogOpen}
-        />
+        <InferencesDataGrid listInferences={listInferences} />
       </PageLayout>
     );
 
   return (
     <PageLayout>
-      <LoadingDataGrid columns={columns} />
+      <LoadingDataGrid />
     </PageLayout>
   );
 };
