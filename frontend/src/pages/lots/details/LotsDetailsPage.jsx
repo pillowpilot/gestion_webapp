@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { LoadingLotForm } from "./LoadingForm";
 import { LotForm } from "./Form";
-import { queryKeys } from "./queries";
+import { lotsKeys } from "../queries";
 
 const PageLayout = ({ children }) => {
   const { t } = useTranslation();
@@ -55,7 +55,7 @@ const LotDetailsPage = () => {
   });
 
   const retrieveLot = useQuery({
-    queryKey: queryKeys.detail(id),
+    queryKey: lotsKeys.detail(id),
     queryFn: () => Api.retrieveLot(id),
     onError: (error) =>
       manageErrorsFromQuery(t, error, enqueueSnackbar),
@@ -64,7 +64,7 @@ const LotDetailsPage = () => {
   const mutation = useMutation({
     mutationFn: (data) => Api.updateLot(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.all);
+      queryClient.invalidateQueries(lotsKeys.all);
       enqueueSnackbar(t("lots.details.updateSuccessMsg"), { variant: 'success'});
     },
     onError: (error) => {
