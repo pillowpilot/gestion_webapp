@@ -69,14 +69,14 @@ const LoginRight = () => {
           <Typography variant="subtitle1">{t("login.caption")}</Typography>
           <TextField
             type="email"
-            label="Email"
+            label={t("login.labels.email")}
             placeholder="Enter your email here"
             required
             {...register("loginEmail")}
           />
           <TextField
             type="password"
-            label="Password"
+            label={t("login.labels.password")}
             placeholder="Enter your password here"
             required
             {...register("loginPassword")}
