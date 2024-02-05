@@ -134,8 +134,8 @@ class InferenceJob(models.Model):
     )
     model = models.CharField(max_length=20)
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, null=True)
-    latitude = models.FloatField(null=True)
-    longitude = models.FloatField(null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     task_id = models.CharField(max_length=100, null=True)
 
     is_active = models.BooleanField(default=True)
