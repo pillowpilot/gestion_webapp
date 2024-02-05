@@ -14,7 +14,7 @@ class InferenceViewSet(viewsets.ModelViewSet):
         user = self.request.user
         company = user.company
         if company:
-            return InferenceJob.objects.filter(lot__parcel__company=company)
+            return InferenceJob.objects.filter(lot__parcel__company=company, is_active=True)
         else:
             return InferenceJob.objects.none()
 

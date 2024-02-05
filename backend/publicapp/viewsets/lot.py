@@ -18,6 +18,6 @@ class LotViewSet(viewsets.ModelViewSet):
         company = user.company
         
         if company:
-            return Lot.objects.filter(parcel__company=company)
+            return Lot.objects.filter(parcel__company=company, is_active=True)
         else:
             return Lot.objects.none()

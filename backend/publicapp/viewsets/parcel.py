@@ -19,7 +19,7 @@ class ParcelViewSet(viewsets.ModelViewSet):
         user = self.request.user
         company = user.company
         if company:
-            return Parcel.objects.filter(company=company)
+            return Parcel.objects.filter(company=company, is_active=True)
         else:
             return Parcel.objects.none()
 
