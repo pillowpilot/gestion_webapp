@@ -15,7 +15,7 @@ import { useQuery } from "react-query";
 import { MuiFileInput } from "mui-file-input";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Api } from "../../api/client";
+import { Api } from "../../../api/client";
 
 const FormErrorMessage = ({ flag, msg }) =>
   flag ? <Alert severity="error">{msg}</Alert> : <></>;
