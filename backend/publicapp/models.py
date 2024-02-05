@@ -100,7 +100,7 @@ class Lot(models.Model):
 
     name = models.CharField(max_length=100)
     parcel = models.ForeignKey(Parcel, on_delete=models.CASCADE)
-    geodata = models.FileField(upload_to="geodata_lots", null=True)
+    geodata = models.FileField(upload_to="geodata_lots", blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(default=timezone.now)
