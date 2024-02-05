@@ -12,6 +12,7 @@ import {
 import { DateCell } from "../../../components/datagrid/Cells";
 import { LoadingDataGrid } from "./Loading";
 import { LotsDataGrid } from "./DataGrid";
+import { lotsKeys } from "../queries";
 
 const PageLayout = ({ children }) => {
   const { t } = useTranslation();
@@ -68,7 +69,7 @@ const LotsPage = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const listLots = useQuery({
-    queryKey: "lots",
+    queryKey: lotsKeys.all,
     queryFn: Api.listLots,
     onError: (error) => manageErrorsFromQuery(t, error, enqueueSnackbar),
   });
