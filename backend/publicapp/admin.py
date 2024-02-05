@@ -19,12 +19,12 @@ class CompanyDomainAdmin(admin.ModelAdmin):
 
 @admin.register(Parcel)
 class ParcelAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "company", "created_on", "updated_on")
+    list_display = ("id", "name", "company", "is_active", "created_on", "updated_on")
 
 
 @admin.register(Lot)
 class LotAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "parcel", "created_on", "updated_on")
+    list_display = ("id", "name", "parcel", "is_active", "created_on", "updated_on")
 
 
 @admin.register(InferenceJob)
@@ -38,6 +38,7 @@ class InferenceJobAdmin(admin.ModelAdmin):
         "status",
         "latitude",
         "longitude",
+        "is_active",
         "created_on",
         "updated_on",
     )
