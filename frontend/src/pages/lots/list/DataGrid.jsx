@@ -1,7 +1,10 @@
 import { Box } from "@mui/material";
-import { DataGrid, esES } from "@mui/x-data-grid";
+import { DataGrid, esES, enUS } from "@mui/x-data-grid";
+import { useTranslation } from "react-i18next";
 
 const LotsDataGrid = ({ data, columns, listLots }) => {
+  const { i18n } = useTranslation();
+
   const rows = data.data?.results?.map((o) => ({
     id: o.id,
     name: o.name,
@@ -9,7 +12,6 @@ const LotsDataGrid = ({ data, columns, listLots }) => {
     geodata: o.geodata,
     created_on: o.created_on,
   }));
-  console.log(rows);
 
   return (
     <Box>
@@ -17,7 +19,11 @@ const LotsDataGrid = ({ data, columns, listLots }) => {
         pageSizeOptions={[10, 25, 50, 100]}
         rows={rows}
         columns={columns}
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+        localeText={
+          i18n.language === "es"
+            ? esES.components.MuiDataGrid.defaultProps.localeText
+            : enUS.components.MuiDataGrid.defaultProps.localeText
+        }
         sx={{
           height: "500px",
         }}
