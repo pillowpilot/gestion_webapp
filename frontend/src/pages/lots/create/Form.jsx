@@ -1,33 +1,30 @@
 import React from "react";
-import { Button, Stack, TextField, Alert, MenuItem, Typography } from "@mui/material";
+import { Button, Stack, TextField, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Controller } from "react-hook-form";
-import { withTranslation } from 'react-i18next';
-import { MuiFileInput } from 'mui-file-input';
+import { withTranslation } from "react-i18next";
+import { MuiFileInput } from "mui-file-input";
 
-
-const FormErrorMessage = ({ flag, msg }) =>
-  flag ? <Alert severity="error">{msg}</Alert> : <></>;
-
-const SuccessfullSubmitMessage = ({ t, flag }) => {
-  if (!flag) return <></>;
-  return (
-    <Alert severity="success">{t("properties.create.createSuccessMsg")}</Alert>
-  );
-};
-
-const Form = ({ t, properties, formMethods, onSubmitHandler }) => {
+const Form = ({ t, properties, formMethods, mutation }) => {
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = formMethods;
 
+  const onSubmit = (d) => {
+    mutation.mutate({
+      name: d.name,
+      parcel: d.parcel,
+      geodata: d.geodata,
+    });
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Stack
         spacing={3}
         sx={{
@@ -44,45 +41,43 @@ const Form = ({ t, properties, formMethods, onSubmitHandler }) => {
           error={errors.name}
           helperText={errors.name?.message}
         />
-        {properties?.length > 0 ? (
-          <TextField
-            select
-            label={t("lots.create.labels.property")}
-            {...register("parcel", {
-              required: t("lots.create.errors.requiredProperty"),
-            })}
-            defaultValue={properties[0].id}
-            error={errors.parcel}
-            helperText={errors.parcel?.message}
-          >
-            {properties?.map((property) => (
-              <MenuItem key={property.id} value={property.id}>
-                {property.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        ) : (
-          <Alert severity="info">
-            {t("lots.create.errors.noPropertiesMsg")}
-          </Alert>
-        )}
-        <Controller 
+        <Controller
+          name="parcel"
+          control={control}
+          defaultValue={properties[0].id}
+          render={({field}) => {
+            return (
+              <TextField
+                select
+                {...field}
+                label={t("lots.create.labels.property")}
+                defaultValue={`${field.value}`}
+              >
+                {properties?.map((o) => (
+                  <MenuItem key={o.id} value={o.id}>
+                    {o.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            );
+          }}
+        ></Controller>
+
+        <Controller
           name="geodata"
           control={control}
-          render={({field, fieldState}) => {
-            return <MuiFileInput {...field} 
-              label={t("properties.create.labels.geodata")}
-              inputProps={{ accept: ".geojson" }}
-              error={fieldState.invalid}
-              helperText={fieldState.invalid? fieldState.error?.message : ""}
-            />
+          render={({ field, fieldState }) => {
+            return (
+              <MuiFileInput
+                {...field}
+                label={t("properties.create.labels.geodata")}
+                inputProps={{ accept: ".geojson" }}
+                error={fieldState.invalid}
+                helperText={fieldState.invalid ? fieldState.error?.message : ""}
+              />
+            );
           }}
         />
-        <FormErrorMessage
-          flag={errors.root?.serverError}
-          msg={errors.root?.serverError?.message}
-        />
-        <SuccessfullSubmitMessage t={t} flag={isSubmitSuccessful} />
         <Stack direction="row" justifyContent="center" gap={1}>
           <Button variant="outlined" size="medium" onClick={() => navigate(-1)}>
             {t("lots.create.goBackBtn")}
