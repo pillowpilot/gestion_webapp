@@ -23,9 +23,13 @@ class ParcelViewSet(viewsets.ModelViewSet):
         else:
             return Parcel.objects.none()
 
-    @action(detail=True, methods=['get'], url_path='lots')
+    @action(detail=True, methods=["get"], url_path="lots")
     def get_lots(self, request, pk=None):
         parcel = self.get_object()
         lots = parcel.lot_set.all()
         lots = LotSerializer(lots, many=True).data
         return Response(lots)
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()

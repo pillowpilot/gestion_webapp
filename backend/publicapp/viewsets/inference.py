@@ -38,3 +38,6 @@ class InferenceViewSet(viewsets.ModelViewSet):
 
         return original_response
 
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()

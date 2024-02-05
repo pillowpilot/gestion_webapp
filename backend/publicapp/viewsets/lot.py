@@ -16,8 +16,12 @@ class LotViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
         company = user.company
-        
+
         if company:
             return Lot.objects.filter(parcel__company=company, is_active=True)
         else:
             return Lot.objects.none()
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
