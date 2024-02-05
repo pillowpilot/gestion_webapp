@@ -11,6 +11,7 @@ const PropertiesDataGrid = ({ columns, listProperties }) => {
     company: o.company_name,
     geodata: o.geodata,
     created_on: o.created_on,
+    updated_on: o.updated_on,
   }));
 
   return (

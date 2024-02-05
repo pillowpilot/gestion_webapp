@@ -126,6 +126,17 @@ const LotsPage = () => {
       ),
     },
     {
+      field: "updated_on",
+      headerName: t("lots.list.datagrid.updatedOn"),
+      width: 250,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="lots.list.datagrid.updatedOnFormat"
+        />
+      ),
+    },
+    {
       field: "actions",
       headerName: t("lots.list.datagrid.actions"),
       width: 150,

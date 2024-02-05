@@ -11,6 +11,7 @@ const LotsDataGrid = ({ data, columns, listLots }) => {
     property: o.parcel_name,
     geodata: o.geodata,
     created_on: o.created_on,
+    updated_on: o.updated_on,
   }));
 
   return (

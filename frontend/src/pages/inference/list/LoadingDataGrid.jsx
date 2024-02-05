@@ -33,6 +33,17 @@ const LoadingDataGrid = () => {
         />
       ),
     },
+    {
+      field: "updated_on",
+      headerName: t("inferences.list.datagrid.updatedOn"),
+      width: 170,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="inferences.list.datagrid.updatedOnFormat"
+        />
+      ),
+    },
     { field: "model", headerName: t("inferences.list.datagrid.model") },
     {
       field: "task_id",

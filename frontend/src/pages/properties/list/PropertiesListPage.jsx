@@ -102,6 +102,17 @@ const PropertiesPage = () => {
       ),
     },
     {
+      field: "updated_on",
+      headerName: t("properties.list.datagrid.updatedOn"),
+      width: 250,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="properties.list.datagrid.updatedOnFormat"
+        />
+      ),
+    },
+    {
       field: "actions",
       headerName: t("properties.list.datagrid.actions"),
       renderCell: (params) => {

@@ -46,6 +46,17 @@ const InferencesDataGrid = ({ listInferences }) => {
         />
       ),
     },
+    {
+      field: "updated_on",
+      headerName: t("inferences.list.datagrid.updatedOn"),
+      width: 170,
+      renderCell: (params) => (
+        <DateCell
+          date={params.value}
+          translationKey="inferences.list.datagrid.updatedOnFormat"
+        />
+      ),
+    },
     { field: "model", headerName: t("inferences.list.datagrid.model") },
     {
       field: "task_id",
@@ -90,6 +101,7 @@ const InferencesDataGrid = ({ listInferences }) => {
     user_name: o.user?.email,
     lot_name: o.lot_name,
     date: o.created_on,
+    updated_on: o.updated_on,
     model: capitalizeEachWord(o.model), // TODO Move formatting into component
     task_id: o.task_id,
     status: capitalizeEachWord(o.status), // TODO Move formatting into component
