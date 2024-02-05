@@ -1,19 +1,41 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export const DeleteInferenceDialog = ({open, onAccept, onReject}) => {
-    const { t } = useTranslation();
-    return (
-        <Dialog open={open}>
-            <DialogContent>
-                <DialogContentText>
-                    {t("inferences.delete.confirmationMsg")}
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onReject}>{t("inferences.delete.goBackBtn")}</Button>
-                <Button onClick={onAccept}>{t("inferences.delete.deleteBtn")}</Button>
-            </DialogActions>
-        </Dialog>
-    );
-}
+export const DeleteInferenceDialog = ({ open, onAccept, onReject }) => {
+  const { t } = useTranslation();
+  return (
+    <Dialog open={open}>
+      <DialogContent>
+        <DialogContentText>
+          {t("inferences.delete.confirmationMsg")}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onReject}>{t("inferences.delete.goBackBtn")}</Button>
+        <Button onClick={onAccept}>{t("inferences.delete.deleteBtn")}</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export const DeleteLotDialog = ({ open, onAccept, onReject }) => {
+  const { t } = useTranslation();
+
+    return ( <Dialog open={open}>
+        <DialogContent>
+          <DialogContentText>
+            {t("lots.delete.confirmationMsg")}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onReject}>{t("lots.delete.goBackBtn")}</Button>
+          <Button onClick={onAccept}>{t("lots.delete.deleteBtn")}</Button>
+        </DialogActions>
+      </Dialog>);
+};

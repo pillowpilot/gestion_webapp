@@ -42,6 +42,12 @@ const t = {
     updateSuccessMsg: "Lot updated successfully",
     updateErrorMsg: "Error updating lot",
   },
+  delete: {
+    confirmationMsg: "Delete lot data? This cannot be undone.",
+    successMsg: "Lot deleted successfully",
+    goBackBtn: "Go back",
+    deleteBtn: "Delete",
+  },
   map: {
     header: "Lot map",
     goBackBtn: "Go back",

@@ -42,6 +42,12 @@ const t = {
     updateSuccessMsg: "Lote actualizado correctamente",
     updateErrorMsg: "Error actualizando el lote",
   },
+  delete: {
+    confirmationMsg: "Eliminar los datos del lote? Esto no se puede deshacer.",
+    successMsg: "Lote eliminado exitosamente",
+    goBackBtn: "Volver",
+    deleteBtn: "Eliminar",
+  },
   map: {
     header: "Mapa del lote",
     goBackBtn: "Volver",
