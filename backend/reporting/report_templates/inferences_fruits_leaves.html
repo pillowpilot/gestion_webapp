@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ page_title_text }}</title>
+    <meta name="description" content="Report example">
+    <style>
+      @font-face {
+        font-family: Fira Sans;
+        font-weight: 400;
+        src: url(file:///home/federico/gestion_webapp/backend/reporting/report_templates/firasans-regular.otf);
+      }
+      
+      @media print {
+        a::after {
+          content: " (" attr(href) ") ";
+        }
+      
+        pre {
+          white-space: pre-wrap;
+        }
+      
+        @page {
+          margin: 0.75in;
+          size: A4;
+      
+          @top-right {
+            content: counter(page);
+          }
+        }
+      
+        @page :first {
+          margin: 0;
+          padding: 0;
+          background: url(file:///home/federico/gestion_webapp/backend/reporting/report_templates/orange_field_a4_cover.png) no-repeat center;
+          background-size: cover;
+
+          @top-right {
+            content: '';
+          }
+        }
+      
+        img {
+          width: 10cm;
+          margin: 0 auto;
+        }
+      }
+
+      .cover {
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      .cover > footer {
+        height: 5cm;
+        margin: 0 -3mm;
+        padding: 1cm;
+        background-color: #660066;
+        color: #bfbfbf;
+        font-family: Fira Sans;
+        font-size: 21pt;
+        line-height: 1.5;
+      }
+
+      .inference-details {
+        break-before: page;
+        height: 259mm;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+
+        border: 1px solid red;
+      }
+
+      .inference-details > picture {
+        border: 1px solid blue;
+      }
+
+      .table_component {
+        width: 167mm;
+
+        border: 1px solid blue;
+      }
+      
+      .table_component table {
+        border: 1px solid #dededf;
+        height: 100%;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border-spacing: 1px;
+        text-align: left;
+      }
+      
+      .table_component caption {
+        caption-side: top;
+        text-align: left;
+      }
+      
+      .table_component th {
+        border: 1px solid #dededf;
+        background-color: #eceff1;
+        color: #000000;
+        padding: 5px;
+      }
+      
+      .table_component td {
+        border: 1px solid #dededf;
+        background-color: #ffffff;
+        color: #000000;
+        padding: 5px;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <section class="cover">
+      <footer>
+        <h1>{{ title_text }}</h1>
+        <p>{{ text }}</p>
+      </footer>
+    </section>
+    {% if not images %}<p>{{ no_images_msg }}</p>{% endif %}
+    {% for image in images %}
+      <section class="inference-details">
+        <picture>
+          <img src="{{ image.path }}" width="300px">
+        </picture>
+        <div class="table_component" role="region" tabindex="0">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  Modelo
+                  <br>
+                </td>
+                <td>{{ image.model or 'Sin datos' }}</td>
+              </tr>
+              <tr>
+                <td>Responsable</td>
+                <td>{{ image.user or 'Sin datos' }}</td>
+              </tr>
+              <tr>
+                <td>
+                  Fecha de Creación
+                  <br>
+                </td>
+                <td>{{ image.created_on or 'Sin datos' }}</td>
+              </tr>
+              <tr>
+                <td>Finca</td>
+                <td>{{ image.parcel or 'Sin datos' }}</td>
+              </tr>
+              <tr>
+                <td>Lote</td>
+                <td>{{ image.lot or 'Sin datos' }}</td>
+              </tr>
+              <tr>
+                <td>Coordenadas</td>
+                <td>{{ image.coords or 'Sin datos' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    {% endfor %}
+  </body>
+</html>
