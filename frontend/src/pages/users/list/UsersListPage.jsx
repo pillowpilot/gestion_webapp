@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Stack, Box, Button, Paper, Typography } from "@mui/material";
 import { DataGrid, esES, enUS } from "@mui/x-data-grid";
+import { useSnackbar } from "notistack";
 import { Api } from "../../../api/client";
 import { useQuery } from "react-query";
 import { useTranslation } from "react-i18next";
@@ -106,10 +107,26 @@ const Actions = () => {
   );
 };
 
+const manageErrorsFromQuery = (t, error, enqueueSnackbar) => {
+  if (error.response) {
+    enqueueSnackbar(error.response.data.detail, { variant: "error" });
+  } else if (error.request) {
+    enqueueSnackbar(t("errors.network.default"), { variant: "error" });
+  } else {
+    enqueueSnackbar(t("errors.unknown.default"), { variant: "error" });
+  }
+};
+
 const UsersPage = () => {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+
   const listUsers = useQuery({
     queryKey: ["users"],
     queryFn: Api.listUsers,
+    onError: (error) => {
+      manageErrorsFromQuery(t, error, enqueueSnackbar);
+    },
   });
 
   if (listUsers.isSuccess)
