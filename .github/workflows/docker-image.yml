@@ -15,11 +15,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build and push docker image
+    
+    - name: Install Python 3.09
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.09
+        
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REPO: ${{ secrets.AWS_ECR_REPOSITORY_URI }}
+        IMAGE_TAG: dev
       run: |
-       apt install python3
-       pip3 install awscli==1.18.8
-       $(aws ecr get-login --no-include-email --region us-east-1)
-       docker build ./backend/ --file Dockerfile --compress
-       docker tag gestion-webapp:latest $AWS_ECR_REPOSITORY_URI:dev
-       docker push $AWS_ECR_REPOSITORY_URI:dev
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REPO:$IMAGE_TAG .
+        docker push $ECR_REPO:$IMAGE_TAG
+        echo "image=$ECR_REPO:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      
+    # - name: Build and push docker image
+    #   run: |
+    #    apt install python3
+    #    pip3 install awscli==1.18.8
+    #    $(aws ecr get-login --no-include-email --region us-east-1)
+    #    docker build ./backend/ --file Dockerfile --compress
+    #    docker tag gestion-webapp:latest $AWS_ECR_REPOSITORY_URI:dev
+    #    docker push $AWS_ECR_REPOSITORY_URI:dev
