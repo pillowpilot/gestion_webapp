@@ -45,6 +45,8 @@ const UserNewPage = () => {
         if (data.lastname)
           setError("lastname", { type: "400", message: data.lastname });
         if (data.email) setError("email", { type: "400", message: data.email });
+        if (data.password)
+          setError("password", { type: "400", message: data.password });
       } else if (error.request) {
         enqueueSnackbar(t("errors.network.default"), { variant: "error" });
       } else {
