@@ -36,6 +36,15 @@ const t = {
   },
   details: {
     goBackBtn: "Go back",
+    labels: {
+      detailsHeader: "Inference Details",
+      lot: "Lot",
+      model: "Model",
+      status: "Status",
+      createdOn: "Created On",
+      updatedOn: "Updated On",
+      previewHeader: "Preview",
+    }
   },
   delete: {
     confirmationMsg: "Delete the inference data? This cannot be undone.",

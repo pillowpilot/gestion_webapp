@@ -36,6 +36,15 @@ const t = {
   },
   details: {
     goBackBtn: "Volver",
+    labels: {
+      detailsHeader: "Detalles de la Inferencia",
+      lot: "Lote",
+      model: "Modelo",
+      status: "Estado",
+      createdOn: "Creado el",
+      updatedOn: "Actualizado el",
+      previewHeader: "Visualización"
+    }
   },
   delete: {
     confirmationMsg: "Eliminar los datos de la inferencia? Esto no se puede deshacer.",
