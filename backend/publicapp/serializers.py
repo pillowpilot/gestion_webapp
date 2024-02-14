@@ -19,6 +19,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
     company = serializers.PrimaryKeyRelatedField(
         allow_null=True, queryset=Company.objects.all()
     )
@@ -30,9 +31,23 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
+            "password",
             "is_company_manager",
             "company",
         )
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        user = super().update(instance, validated_data)
+        if "password" in validated_data:
+            user.set_password(validated_data["password"])
+            user.save()
+        return user
 
 
 class ParcelSerializer(serializers.ModelSerializer):
