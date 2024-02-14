@@ -71,3 +71,21 @@ axios.get('/user/12345')
     },
 }
 ```
+
+## Axios Bad Response Error Object
+
+```json
+{
+  "message": "Request failed with status code 500",
+  "name": "AxiosError",
+  "config": {...},
+  "code": "ERR_BAD_RESPONSE",
+  "request": {...},
+  "response": {
+    "data": "...",
+    "status": 500,
+    "statusText": "Internal Server Error",
+  }
+  ...
+}
+```
