@@ -1,18 +1,14 @@
-from django import forms
-from .models import Image
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import CustomUser
 
-class ImageForm(forms.ModelForm):
-    """Form for the image model"""
+
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        model = Image
-        fields = ('title', 'image')
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': "form-control",
-                'placeholder': 'Title'
-                }),
-            'image': forms.FileInput(attrs={
-                'class': "form-control",
-                'placeholder': 'Image'
-                }),
-        }
+        model = CustomUser
+        fields = ("email",)
+
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ("email",)

@@ -150,39 +150,3 @@ class InferenceJob(models.Model):
 
     def __repr__(self):
         return f"InferenceJob(image={self.image}, model={self.model}, lot={self.lot}, task_id={self.task_id})"
-
-
-class Image(models.Model):
-    """Image model for uploading"""
-
-    title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="images")
-
-    def __init__(self, *args, **kwargs):
-        warn(
-            f"{self.__class__.__name__} will be deprecated",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        super().__init__(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-
-class AnnotatedImages(models.Model):
-    """Annotated images model for storing the annotated images"""
-
-    leaves_annotations = models.ImageField(upload_to="annotated_images")
-    fruits_annotations = models.ImageField(upload_to="annotated_images")
-
-    def __init__(self, *args, **kwargs):
-        warn(
-            f"{self.__class__.__name__} will be deprecated",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        super().__init__(*args, **kwargs)
-
-    def __str__(self):
-        return self.leaves_annotations.name
