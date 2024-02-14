@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   Button,
   Stack,
@@ -22,7 +22,8 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = formMethods;
 
   const onSubmit = (d) => {
@@ -34,6 +35,14 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
       company: auth.company.id,
     });
   };
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({
+        password: "",
+      });
+    }
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -49,7 +58,7 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
             required: t("users.details.errors.requiredName"),
           })}
           defaultValue={data?.first_name}
-          error={errors.name}
+          error={!!errors.name}
           helperText={errors.name?.message}
         />
         <TextField
@@ -58,7 +67,7 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
             required: t("users.details.errors.requiredLastname"),
           })}
           defaultValue={data?.last_name}
-          error={errors.lastname}
+          error={!!errors.lastname}
           helperText={errors.lastname?.message}
         />
         <TextField
@@ -67,7 +76,7 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
             required: t("users.details.errors.requiredEmail"),
           })}
           defaultValue={data?.email}
-          error={errors.email}
+          error={!!errors.email}
           helperText={errors.email?.message}
         />
         <TextField
@@ -76,7 +85,7 @@ const UserDataForm = ({ data, formMethods, mutation }) => {
           {...register("password", {
             required: t("users.details.errors.requiredPassword"),
           })}
-          error={errors.password}
+          error={!!errors.password}
           helperText={errors.password?.message}
           InputProps={{
             endAdornment: (

@@ -33,8 +33,10 @@ const manageErrorsFromQuery = (t, error, enqueueSnackbar) => {
   }
 };
 
-const UserDetailsPage = () => {
-  const { id } = useParams();
+const UserDetailsPage = ({ id }) => {
+  const params = useParams();
+  if (params.id) id = params.id;
+
   const { t } = useTranslation();
 
   const formMethods = useForm();
