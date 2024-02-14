@@ -60,7 +60,7 @@ const LanguageOptions = ({handleCloseAccountMenu}) => {
     <>
       <MenuItem
         onClick={() => {i18n.changeLanguage("en"); handleCloseAccountMenu(); }}
-        sx={i18n.language === "en" && activeOptionStyle}
+        sx={i18n.language === "en"? activeOptionStyle : {}}
       >
         <ListItemIcon>
           <SvgIcon>
@@ -72,7 +72,7 @@ const LanguageOptions = ({handleCloseAccountMenu}) => {
 
       <MenuItem
         onClick={() => {i18n.changeLanguage("es"); handleCloseAccountMenu(); }}
-        sx={i18n.language === "es" && activeOptionStyle}
+        sx={i18n.language === "es"? activeOptionStyle: {}}
       >
         <ListItemIcon>
           <SvgIcon>
