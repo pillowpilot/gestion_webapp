@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from ..models import Lot
 from ..serializers import LotSerializer
 from ..permissions import CustomDjangoModelPermissions
@@ -24,4 +26,15 @@ class LotViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         instance.is_active = False
+
+        inferences = instance.inferencejob_set.filter(is_active=True)
+        for inference in inferences:
+            inference.is_active = False
+            inference.save()
+
         instance.save()
+
+    @action(detail=False, methods=["get"])
+    def total(self, request):
+        total = Lot.objects.filter(is_active=True).count()
+        return Response({"total": total}, status=status.HTTP_200_OK)

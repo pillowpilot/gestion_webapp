@@ -43,6 +43,12 @@ const t = {
     updateSuccessMsg: "Property updated successfully",
     updateErrorMsg: "Error updating property",
   },
+  delete: {
+    confirmationMsg: "Delete property data? This cannot be undone.",
+    successMsg: "Property deleted successfully",
+    goBackBtn: "Go back",
+    deleteBtn: "Delete",
+  },
   map: {
     header: "Property map",
     goBackBtn: "Go back",

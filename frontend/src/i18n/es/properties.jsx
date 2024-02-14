@@ -43,6 +43,12 @@ const t = {
     updateSuccessMsg: "Finca actualizada correctamente",
     updateErrorMsg: "Error actualizando finca",
   },
+  delete: {
+    confirmationMsg: "Eliminar datos de la finca? Esto no se puede deshacer.",
+    deleteSuccessMsg: "Finca eliminada correctamente",
+    deleteBtn: "Eliminar",
+    goBackBtn: "Volver",
+  },
   map: {
     header: "Mapa de la finca",
     goBackBtn: "Volver",

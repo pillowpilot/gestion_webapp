@@ -7,35 +7,53 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export const DeleteInferenceDialog = ({ open, onAccept, onReject }) => {
-  const { t } = useTranslation();
+export const DeleteDialog = ({
+  open,
+  text,
+  onAccept,
+  onAcceptLabel,
+  onReject,
+  onRejectLabel,
+}) => {
   return (
     <Dialog open={open}>
       <DialogContent>
-        <DialogContentText>
-          {t("inferences.delete.confirmationMsg")}
-        </DialogContentText>
+        <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onReject}>{t("inferences.delete.goBackBtn")}</Button>
-        <Button onClick={onAccept}>{t("inferences.delete.deleteBtn")}</Button>
+        <Button onClick={onReject}>{onRejectLabel}</Button>
+        <Button onClick={onAccept}>{onAcceptLabel}</Button>
       </DialogActions>
     </Dialog>
+  );
+};
+
+export const DeleteInferenceDialog = ({ open, onAccept, onReject }) => {
+  const { t } = useTranslation();
+
+  return (
+    <DeleteDialog
+      open={open}
+      text={t("inferences.delete.confirmationMsg")}
+      onAccept={onAccept}
+      onAcceptLabel={t("inferences.delete.deleteBtn")}
+      onReject={onReject}
+      onRejectLabel={t("inferences.delete.goBackBtn")}
+    />
   );
 };
 
 export const DeleteLotDialog = ({ open, onAccept, onReject }) => {
   const { t } = useTranslation();
 
-    return ( <Dialog open={open}>
-        <DialogContent>
-          <DialogContentText>
-            {t("lots.delete.confirmationMsg")}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onReject}>{t("lots.delete.goBackBtn")}</Button>
-          <Button onClick={onAccept}>{t("lots.delete.deleteBtn")}</Button>
-        </DialogActions>
-      </Dialog>);
+  return (
+    <DeleteDialog
+      open={open}
+      text={t("lots.delete.confirmationMsg")}
+      onAccept={onAccept}
+      onAcceptLabel={t("lots.delete.deleteBtn")}
+      onReject={onReject}
+      onRejectLabel={t("lots.delete.goBackBtn")}
+    />
+  );
 };

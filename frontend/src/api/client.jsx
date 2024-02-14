@@ -78,6 +78,8 @@ export const Api = {
     }),
     retrieveProperty: (id) => apiClient.get(`/api/parcels/${id}/`),
     updateProperty: (id, data) => apiClient.put(`/api/parcels/${id}/`, data),
+    retrieveTotalNumberOfProperties: () => apiClient.get(`/api/parcels/total/`),
+    deleteProperty: (id) => apiClient.delete(`/api/parcels/${id}/`),
 
     listLots: () => apiClient.get(`/api/lots/`),
     createLot: (data) => apiClient.post(`/api/lots/`, data, {
@@ -89,6 +91,7 @@ export const Api = {
     updateLot: (id, data) => apiClient.put(`/api/lots/${id}/`, data),
     partiallyUpdateLot: (id, data) => apiClient.patch(`/api/lots/${id}/`, data),
     deleteLot: (id) => apiClient.delete(`/api/lots/${id}/`),
+    retrieveTotalNumberOfLots: () => apiClient.get(`/api/lots/total/`),
 
     listInferences: () => apiClient.get(`/api/inferences/`),
     createInference: (data) => apiClient.post(`/api/inferences/`, data, {
@@ -98,6 +101,7 @@ export const Api = {
     }),
     retrieveInference: (id) => apiClient.get(`/api/inferences/${id}/`),
     deleteInference: (id) => apiClient.delete(`/api/inferences/${id}/`),
+    retrieveTotalNumberOfInferences: () => apiClient.get(`/api/inferences/total/`),
 }
 
 export default apiClient;
