@@ -69,7 +69,6 @@ function App() {
     {
       path: "/",
       element: <RootComponent />,
-      errorElement: <NotFoundPage />,
       children: [
         {
           path: "dashboard",
@@ -175,6 +174,10 @@ function App() {
       path: "/logout",
       element: <Logout />,
     },
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    }
   ]);
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import properties_en from "./en/properties";
 import users_en from "./en/users";
 import login_en from "./en/login";
 import errors_en from "./en/errors";
+import notfound_en from "./en/notfound";
 
 import topbar_es from "./es/topbar";
 import inferences_es from "./es/inferences";
@@ -16,6 +17,7 @@ import properties_es from "./es/properties";
 import users_es from "./es/users";
 import login_es from "./es/login";
 import errors_es from "./es/errors";
+import notfound_es from "./es/notfound";
 
 
 i18n.use(initReactI18next).init({
@@ -35,6 +37,7 @@ i18n.use(initReactI18next).init({
         users: users_en,
         login: login_en,
         errors: errors_en,
+        notfound: notfound_en,
       },
     },
     es: {
@@ -46,6 +49,7 @@ i18n.use(initReactI18next).init({
         users: users_es,
         login: login_es,
         errors: errors_es,
+        notfound: notfound_es,
       },
     },
   },
