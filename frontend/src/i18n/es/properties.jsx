@@ -45,7 +45,7 @@ const t = {
   },
   delete: {
     confirmationMsg: "Eliminar datos de la finca? Esto no se puede deshacer.",
-    deleteSuccessMsg: "Finca eliminada correctamente",
+    successMsg: "Finca eliminada correctamente",
     deleteBtn: "Eliminar",
     goBackBtn: "Volver",
   },

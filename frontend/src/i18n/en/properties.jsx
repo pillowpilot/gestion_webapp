@@ -46,8 +46,8 @@ const t = {
   delete: {
     confirmationMsg: "Delete property data? This cannot be undone.",
     successMsg: "Property deleted successfully",
-    goBackBtn: "Go back",
     deleteBtn: "Delete",
+    goBackBtn: "Go back",
   },
   map: {
     header: "Property map",
